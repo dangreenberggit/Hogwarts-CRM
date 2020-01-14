@@ -2,7 +2,7 @@ import json
 from flask import Flask, request, render_template, redirect, url_for
 from random import randint
 from school_data import students, skills, courses
-from api_functions import find_student, check_existing_student, generate_id
+from api_functions import find_student, check_existing_student, generate_id, create_student
 
 app = Flask(__name__, template_folder='./serving_static/templates', static_folder='./serving_static/static')
 
@@ -14,50 +14,8 @@ def get_student(id):
 
 @app.route('/add_student', methods=['POST'])
 def add_student():
-    student_id = generate_id(students)
-    new_student = {
-        "id": student_id,
-        "data": {
-            "first_name": request.form.get('first_name'),
-            "last_name": request.form.get('last_name'),
-            "student_skills": [],
-            "desired_skills": [],
-            "desired_courses": [],
-        },
-    }
-
-    if check_existing_student(new_student):
-        return "Error: Student already exists!"
-
-    for skill in skills:
-        possessed_skill_button = skill["id"] + "skill"
-        desired_skill_button = skill["id"] + "desskill"
-        possessed_skill = request.form.get(possessed_skill_button)
-        desired_skill = request.form.get(desired_skill_button)
-        if int(possessed_skill) > 0:
-            new_skill = {
-                "skill": skill["id"],
-                "level": possessed_skill,
-            }
-            new_student["data"]["student_skills"].append(new_skill)
-            skill["data"]["students_with_skill"].append(new_student["id"])
-        if int(desired_skill) > 0:
-            new_skill = {
-                "skill": skill["id"],
-                "level": desired_skill,
-            }
-            new_student["data"]["desired_skills"].append(new_skill)
-            skill["data"]["students_desiring_skill"].append(new_student["id"])
-
-    for course in courses:
-        course_button = course["id"] + "course"
-        course_check = request.form.get(course_button)
-        if course_check == "on":
-            new_student["data"]["desired_courses"].append(course["id"])
-            course["data"]["students_interested"].append(new_student["id"])
-
-    else:
-        students.append(new_student)
+    new_student = create_student(request.form.get)
+    print("new_student post process complete")
     return json.dumps(new_student)
 
 # Static file handlers
