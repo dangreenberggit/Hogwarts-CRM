@@ -12,12 +12,18 @@ def get_student(id):
     student = find_student(id)
     return json.dumps(student)
 
+@app.route('/student', methods=['GET'])
+def get_all_student(id):
+    return json.dumps(students)
+
 @app.route('/add_student', methods=['POST'])
 def add_student():
     response_data = request.form.get
-    student = create_student(response_data)
-    print("new_student post process complete")
-    return json.dumps(student)
+    student_created = create_student(response_data)
+    if student_created:
+        return "student enrolled successfully"
+    else:
+        return "student enrollment failed"
 
 @app.route('/student/<id>', methods=['DELETE'])
 def delete_student(id):
@@ -37,6 +43,18 @@ def homepage():
 def catalog_display():
     return render_template("new_student.html", skills=skills, courses=courses)
 
+
+@app.route('/serving_static/static/<path:path>')
+def static_root(path):
+    return app.send_static_file(path)
+
+@app.route('/serving_static/templates/<path:path>')
+def temp_root(path):
+    return render_template(path)
+
+@app.route('/serving_static/static/css/<path:path>')
+def stylesheets(path):
+    return app.send_static_file('css/' + path)
 
 @app.after_request
 def add_header(r):

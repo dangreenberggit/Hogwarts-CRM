@@ -38,7 +38,6 @@ def generate_id(type):
 
 
 def add_skills(student, get, type):
-    print("adding courses of type: " + type)
     if type == "possessed":
         student_data = student["data"]["student_skills"]
         skill_get = "skill"
@@ -59,19 +58,16 @@ def add_skills(student, get, type):
             }
             student_data.append(new_skill)
             skill_data.append(student["id"])
-            print("course added")
 
 
 
 def add_courses(student, get):
-    print("adding courses")
     for course in courses:
         course_button = course["id"] + "course"
         course_check = get(course_button)
         if course_check == "on":
             student["data"]["desired_courses"].append(course["id"])
             course["data"]["students_interested"].append(student["id"])
-            print("course added")
 
 
 def student_template():
@@ -97,11 +93,11 @@ def create_student(get):
     new_student["data"]["first_name"], new_student["data"]["last_name"] = get('first_name'), get('last_name')
 
     if check_existing_student(new_student):
-        return "Error: Student already exists!"
+        return False
 
     add_skills(new_student, get, "possessed")
     add_skills(new_student, get, "desired")
     add_courses(new_student, get)
     students.append(new_student)
 
-    return new_student
+    return True
