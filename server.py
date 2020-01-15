@@ -14,7 +14,8 @@ def get_student(id):
 
 @app.route('/add_student', methods=['POST'])
 def add_student():
-    new_student = create_student(request.form.get)
+    response = request.form.get
+    new_student = create_student(response)
     print("new_student post process complete")
     return json.dumps(new_student)
 

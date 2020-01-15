@@ -60,33 +60,34 @@ def add_courses(student, get):
             print("course added")
 
 
-def create_student(get):
-    print("creating student")
-    student_id = generate_id(students)
+def student_template():
     new_student = {
-        "id": student_id,
+        "id": "",
         "data": {
-            "first_name": get('first_name'),
-            "last_name": get('last_name'),
+            "first_name": "",
+            "last_name": "",
             "student_skills": [],
             "desired_skills": [],
             "desired_courses": [],
         },
     }
+    return new_student
+
+
+def create_student(get):
+
+    student_id = generate_id(students)
+
+    new_student = student_template()
+    new_student["id"] = student_id
+    new_student["data"]["first_name"], new_student["data"]["last_name"] = get('first_name'), get('last_name')
+
     if check_existing_student(new_student):
         return "Error: Student already exists!"
-
-    print(new_student["data"]["first_name"] + "data filling")
 
     add_skills(new_student, get, "possessed")
     add_skills(new_student, get, "desired")
     add_courses(new_student, get)
-
-    print("student created")
-
     students.append(new_student)
-
-    if check_existing_student(new_student):
-        print("student added to db")
 
     return new_student
