@@ -2,22 +2,29 @@ import json
 from flask import Flask, request, render_template, redirect, url_for
 from random import randint
 from school_data import students, skills, courses
-from api_functions import find_student, check_existing_student, generate_id, create_student
+from api_functions import find_student, delete_student, create_student
 
 app = Flask(__name__, template_folder='./serving_static/templates', static_folder='./serving_static/static')
 
 
-@app.route('/get_student/<id>', methods=['GET'])
+@app.route('/student/<id>', methods=['GET'])
 def get_student(id):
     student = find_student(id)
     return json.dumps(student)
 
 @app.route('/add_student', methods=['POST'])
 def add_student():
-    response = request.form.get
-    new_student = create_student(response)
+    response_data = request.form.get
+    student = create_student(response_data)
     print("new_student post process complete")
-    return json.dumps(new_student)
+    return json.dumps(student)
+
+@app.route('/student/<id>', methods=['DELETE'])
+def delete_student(id):
+    student = find_student(id)
+    delete_student(student)
+    return "student deleted"
+
 
 # Static file handlers
 

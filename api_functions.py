@@ -6,22 +6,36 @@ def find_student(id):
         if student["id"] == id:
             return student
 
+
+def delete_student(id):
+    for student in students:
+        if student["id"] == id:
+            del student
+
+
 def check_existing_student(new_student):
     for student in students:
         if student_name(new_student) == student_name(student):
             return True
     return False
 
+
 def student_name(student):
     student_name = student["data"]["first_name"] + student["data"]["last_name"]
     return student_name
 
+
 def generate_id(type):
     id = str(randint(0, 500))
+    id_list = []
     for item in type:
-        while item["id"] == id:
-            id = str(randint(0, 500))
+        id_list.append(item["id"])
+
+    while id in id_list:
+        id = str(randint(0, 500))
+
     return id
+
 
 def add_skills(student, get, type):
     print("adding courses of type: " + type)
