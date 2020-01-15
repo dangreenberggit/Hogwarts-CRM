@@ -36,7 +36,7 @@ def delete_student(id):
 
 @app.route("/")
 def homepage():
-    return "Hogwarts CRM"
+    return render_template("index.html")
 
 
 @app.route('/templates/new_student.html')
