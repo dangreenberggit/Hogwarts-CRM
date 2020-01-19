@@ -16,13 +16,13 @@
        <nav class="sidebar active">
 	            <ul class="list-unstyled components mb-5">
               <li class="active">
-                <a href="#"><span class="fas fa-cog fa-spin fa-fw"></span> Home</a>
+                <a href="/"><span class="fas fa-cog fa-spin fa-fw"></span> Home</a>
               </li>
               <li>
-                  <a href="/add_student"><span class="fas fa-user fa-fw"></span> Students</a>
+                  <a href="/students"><span class="fas fa-user fa-fw"></span> Students</a>
               </li>
               <li>
-                <a href="#"><span class="fas fa-hat-wizard fa-fw"></span> Enroll New Student</a>
+                <a href="templates/new_student"><span class="fas fa-hat-wizard fa-fw"></span> Enroll New Student</a>
               </li>
               <li>
                 <a href="#"><span class="fas fa-magic fa-fwc"></span> Magic Abilities</a>
@@ -31,9 +31,11 @@
         </nav>
         {% endblock %}
 
-        <div class="content">
+        <div class="content-wrapper">
+            <div class="content">
             {% block content %}
             {% endblock %}
+            </div>
         </div>
     </div>
 

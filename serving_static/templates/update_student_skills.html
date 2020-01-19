@@ -1,61 +1,53 @@
 {% extends 'index.html' %}
   {% block content %}
  <div>
-    <form action="/students" method="POST">
-      <div class="form-group row">
-        <label class="col-sm-3 col-form-label">First Name</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" name="first_name" placeholder="First Name">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-sm-3 col-form-label">Last Name</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" name="last_name" placeholder="Last Name">
-        </div>
-      </div>
-        <hr/>
-      <fieldset class="form-group">
+    <form action="/students/{student['id']}/update_skills" method="POST">
+          <fieldset class="form-group">
         <div class="row">
           <legend class="col-form-label col-sm-3 pt-0">Skills</legend>
           <div class="col-sm-9">
-            {%for skill in skills%}
+            {%for skill in student["possessed_skills"]%}
               <div class="row">
-                <label>{{skill["data"]["skill_name"]}}</label>
+                <label>{{skill["name"]}}</label>
               </div>
             <div class="row">
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios0 value="0" checked>
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios0 value="0">
                   <label class="custom-control-label" for={{skill["id"]}}gridRadios0>
                     0
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios1 value="1">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios1 value="1"
+                  {{'checked' if skill["level"]=="1" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}gridRadios1>
                     1
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios2 value="2">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios2 value="2"
+                   {{'checked' if skill["level"]=="2" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}gridRadios2>
                     2
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios3 value="3">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios3 value="3"
+                   {{'checked' if skill["level"]=="3" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}gridRadios3>
                     3
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios4 value="4">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios4 value="4"
+                   {{'checked' if skill["level"]=="4" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}gridRadios4>
                     4
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios5 value="5">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}skill id={{skill["id"]}}gridRadios5 value="5"
+                   {{'checked' if skill["level"]=="5" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}gridRadios5>
                     5
                   </label>
@@ -70,43 +62,48 @@
         <div class="row">
           <legend class="col-form-label col-sm-3 pt-0">Desired Skills</legend>
           <div class="col-sm-9">
-            {%for skill in skills%}
+            {%for skill in student["desired_skills"]%}
               <div class="row">
-                <label>{{skill["data"]["skill_name"]}}</label>
+                <label>{{skill["name"]}}</label>
               </div>
             <div class="row">
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios0 value="0" checked>
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios0 value="0">
                   <label class="custom-control-label" for={{skill["id"]}}desgridRadios0>
                     0
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desgskill id={{skill["id"]}}desgridRadios1 value="1">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desgskill id={{skill["id"]}}desgridRadios1 value="1"
+                   {{'checked' if skill["level"]=="1" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}desgridRadios1>
                     1
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios2 value="2">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios2 value="2"
+                   {{'checked' if skill["level"]=="2" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}desgridRadios2>
                     2
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios3 value="3">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios3 value="3"
+                   {{'checked' if skill["level"]=="3" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}desgridRadios3>
                     3
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios4 value="4">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desskill id={{skill["id"]}}desgridRadios4 value="4"
+                   {{'checked' if skill["level"]=="4" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}desgridRadios4>
                     4
                   </label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desgskill id={{skill["id"]}}desgridRadios5 value="5">
+                  <input class="custom-control-input" type="radio" name={{skill["id"]}}desgskill id={{skill["id"]}}desgridRadios5 value="5"
+                   {{'checked' if skill["level"]=="5" else ''}}>
                   <label class="custom-control-label" for={{skill["id"]}}desgridRadios5>
                     5
                   </label>
@@ -116,23 +113,9 @@
           </div>
         </div>
       </fieldset>
-        <hr/>
-      <div class="form-group row">
-        <div class="col-sm-3">Courses</div>
+    <div class="form-group row">
         <div class="col-sm-9">
-          {%for course in courses%}
-          <div class="custom-control custom-checkbox">
-            <input class="custom-control-input" type="checkbox" name={{course["id"]}}course id={{course["id"]}}>
-            <label class="custom-control-label" for={{course["id"]}}>
-              {{course["data"]["course_name"]}}
-            </label>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-9">
-          <button type="submit" class="btn btn-primary">Add Student</button>
+          <button type="submit" class="btn btn-primary">Update Skills</button>
         </div>
       </div>
     </form>

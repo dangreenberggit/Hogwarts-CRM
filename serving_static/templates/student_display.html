@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+  {% block content %}
+
+    <h2>Name: {{ student["name"] }}</h2>
+    <h2>Skills:</h2>
+    <ul class="fa-ul">
+    {%for skill in student["possessed_skills"] %}
+        <li><span class="fa-li"><i class="fas fa-stroopwafel fa-spin"></i></span>
+          {{skill["name"]}}: {{skill["level"]}}
+        </li>
+    {% endfor %}
+    </ul>
+    <h2>Desired Skills:</h2>
+    <ul class="fa-ul">
+    {%for skill in student["desired_skills"] %}
+        <li><span class="fa-li"><i class="fas fa-stroopwafel fa-spin"></i></span>
+          {{skill["name"]}}: {{skill["level"]}}
+        </li>
+    {% endfor %}
+    </ul>
+    <h2>Courses:</h2>
+    <ul class="fa-ul">
+    {%for course in student["courses"] %}
+        <li><span class="fa-li"><i class="fas fa-stroopwafel fa-spin"></i></span>
+          {{course["name"]}}
+        </li>
+    {% endfor %}
+    </ul>
+<div>
+    <button type="submit" id="edit" href="/update?id=student{'id'}" class="btn btn-primary">Edit Student</button>
+    <button type="submit" id="delete" class="btn btn-primary">Expel Student</button>
+</div>
+
+{% endblock %}

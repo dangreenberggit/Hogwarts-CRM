@@ -1,35 +1,48 @@
 import json
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, abort, redirect
 from random import randint
 from school_data import students, skills, courses
-from api_functions import find_student, delete_student, create_student
+from api_functions import find_student, delete_student, create_student, get_student_data, add_student_skills, get_missing_skills
 
 app = Flask(__name__, template_folder='./serving_static/templates', static_folder='./serving_static/static')
 
 
-@app.route('/student/<id>', methods=['GET'])
+@app.route('/students/<id>', methods=['GET'])
 def get_student(id):
-    student = find_student(id)
-    return json.dumps(student)
+    student_data = get_student_data(id)
+    if not student_data:
+        abort(404)
+    return render_template("student_display.html", student=student_data), 200
 
-@app.route('/student', methods=['GET'])
-def get_all_student(id):
-    return json.dumps(students)
+@app.route('/students', methods=['GET'])
+def get_all_student():
+    return json.dumps(students), 200
 
-@app.route('/add_student', methods=['POST'])
+@app.route('/students', methods=['POST'])
 def add_student():
     response_data = request.form.get
     student_created = create_student(response_data)
     if student_created:
-        return "student enrolled successfully"
+        return redirect(url_for('students'), 201)
     else:
         return "student enrollment failed"
 
-@app.route('/student/<id>', methods=['DELETE'])
+@app.route('/students/<id>/add_student_skills', methods=['GET'])
+def add_student_skills_form(id):
+    missing_skills = get_missing_skills(id)
+    return render_template("add_student_skills.html", student=student, skills=missing_skills), 200
+
+@app.route('/students/<id>/add_student_skills', methods=['POST'])
+def add_student_skills(id):
+    response_data = request.form.get
+    add_student_skills(id, response_data)
+    return redirect(url_for('students/' + id), 201)
+
+@app.route('/students/<id>', methods=['DELETE'])
 def delete_student(id):
     student = find_student(id)
     delete_student(student)
-    return "student deleted"
+    return "student deleted", 200
 
 
 # Static file handlers
@@ -39,7 +52,7 @@ def homepage():
     return render_template("index.html")
 
 
-@app.route('/templates/new_student.html')
+@app.route('/templates/new_student')
 def catalog_display():
     return render_template("new_student.html", skills=skills, courses=courses)
 
@@ -67,4 +80,3 @@ def add_header(r):
 
 if __name__ == "__main__":
     app.run(host="localhost", port=7000, debug=True)
-    response = request.post("http://localhost:7000/add_student/")

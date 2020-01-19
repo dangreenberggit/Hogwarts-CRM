@@ -5,6 +5,7 @@ def find_student(id):
     for student in students:
         if student["id"] == id:
             return student
+    return False
 
 
 def delete_student(id):
@@ -15,13 +16,13 @@ def delete_student(id):
 
 def check_existing_student(new_student):
     for student in students:
-        if student_name(new_student) == student_name(student):
+        if get_student_name(new_student) == get_student_name(student):
             return True
     return False
 
 
-def student_name(student):
-    student_name = student["data"]["first_name"] + student["data"]["last_name"]
+def get_student_name(student):
+    student_name = student["data"]["first_name"] + " " + student["data"]["last_name"]
     return student_name
 
 
@@ -37,7 +38,7 @@ def generate_id(type):
     return id
 
 
-def add_skills(student, get, type):
+def new_skills(student, get, type):
     if type == "possessed":
         student_data = student["data"]["student_skills"]
         skill_get = "skill"
@@ -88,6 +89,8 @@ def create_student(get):
 
     student_id = generate_id(students)
 
+    #timestamp = datetime.datetime.now().str
+
     new_student = student_template()
     new_student["id"] = student_id
     new_student["data"]["first_name"], new_student["data"]["last_name"] = get('first_name'), get('last_name')
@@ -95,9 +98,80 @@ def create_student(get):
     if check_existing_student(new_student):
         return False
 
-    add_skills(new_student, get, "possessed")
-    add_skills(new_student, get, "desired")
+    new_skills(new_student, get, "possessed")
+    new_skills(new_student, get, "desired")
     add_courses(new_student, get)
     students.append(new_student)
 
     return True
+
+def list_skills(student):
+    student = find_student(id)
+    skill_list = []
+    for skill in student["data"]["student_skills"]:
+        skill_list.append(skill["id"])
+    return skill_list
+
+def get_missing_skills(id):
+    student = find_student(id)
+    skill_list = list_skills(student)
+    missing_skills = []
+
+    for skill in skills:
+        if not skill["id"] in skill_list:
+            missing_skill = {
+                "id": skill["name"],
+                "name": skill["data"]["skill_name"],
+            }
+            missing_skills.append(missing_skill)
+
+    return missing_skills
+
+
+def add_student_skills(id, get):
+    student = find_student(id)
+
+    for skill in skills:
+        skill_button = skill["id"] + "skill"
+        skill_check = get(skill_button)
+        if skill_check == "on":
+            student["data"]["student_skills"].append(skill["id"])
+            skill["data"]["students_with_skill"].append(student["id"])
+
+
+def get_list_from_data(student, student_data, data_type):
+    student_data_list = []
+
+    for student_item in student["data"][student_data]:
+        student_data_object = {}
+        for type_item in data_type:
+            if (student_data == "desired_courses") and (student_item != type_item["id"]):
+                continue
+            elif (student_data == "desired_courses") and (student_item == type_item["id"]):
+                student_data_object["name"] = type_item["data"]["course_name"]
+                student_data_object["id"] = student_item["id"]
+                student_data_list.append(student_data_object)
+            elif (student_data == "student_skills" or "desired_skills") and (student_item["skill"] == type_item["id"]):
+                student_data_object["name"] = type_item["data"]["skill_name"]
+                student_data_object["level"] = student_item["level"]
+                student_data_object["id"] = student_item["id"]
+                student_data_list.append(student_data_object)
+    return student_data_list
+
+
+def get_student_data(id):
+
+    student = find_student(id)
+
+    if not student:
+        return False
+
+    student_display_data = {
+        "id": id,
+        "name": student["data"]["first_name"] + " " + student["data"]["last_name"],
+        "possessed_skills": get_list_from_data(student, "student_skills", skills),
+        "desired_skills": get_list_from_data(student, "desired_skills", skills),
+        "courses": get_list_from_data(student, "desired_courses", courses),
+    }
+
+    return student_display_data

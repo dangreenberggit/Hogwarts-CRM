@@ -26,15 +26,23 @@ a {
     max-height: 150px;
 }
 
-.content{
+.content-wrapper{
   left: 225px;
   width:calc(100% - 270px);
   height: 100vh;
   max-height: calc(100% - 150px);
   padding-top: 50px;
   padding-left: 50px;
+}
+
+.content {
+    background-color: rgba(255,255,255,0);
+}
+
+.home {
   background: url('/serving_static/static/img/hogwarts-bg.jpg') no-repeat center center fixed;
   background-size: cover;
+  opacity: 0.7;
 }
 
 .custom-control-label {
