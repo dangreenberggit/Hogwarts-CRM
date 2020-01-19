@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+  {% block content %}
+
+<div id="student_display">
+    <h2>Students:</h2>
+    <ul class="fa-ul">
+    {%for student in student_list %}
+        {% set student_url = "/students/" ~ student['id'] %}
+        <li<span><i class="fas fa-stroopwafel fa-spin"></i></span>
+            <a href={{ student['id_URL'] }}>{{student["name"]}}</a>
+        </li>
+        <br/>
+    {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

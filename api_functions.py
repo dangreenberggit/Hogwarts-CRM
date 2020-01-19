@@ -61,6 +61,23 @@ def new_skills(student, get, type):
             skill_data.append(student["id"])
 
 
+def update_skills_by_type(student, get, kind):
+    if kind == "possessed":
+        student_data = student["data"]["student_skills"]
+        skill_get = "skill"
+
+    if kind == "desired":
+        student_data = student["data"]["desired_skills"]
+        skill_get = "desskill"
+
+    for skill in student_data:
+        skill_button = skill["skill"] + skill_get
+        skill_level = get(skill_button)
+        if skill_level and int(skill_level) > 0:
+            skill["level"] = skill_level
+
+        # skill_data.append(student["id"]) function to update student info under skills if skill dictionary not removed
+
 
 def add_courses(student, get):
     for course in courses:
@@ -103,14 +120,15 @@ def create_student(get):
     add_courses(new_student, get)
     students.append(new_student)
 
-    return True
+    return new_student["id"]
+
 
 def list_skills(student):
-    student = find_student(id)
     skill_list = []
     for skill in student["data"]["student_skills"]:
-        skill_list.append(skill["id"])
+        skill_list.append(skill["skill"])
     return skill_list
+
 
 def get_missing_skills(id):
     student = find_student(id)
@@ -120,7 +138,7 @@ def get_missing_skills(id):
     for skill in skills:
         if not skill["id"] in skill_list:
             missing_skill = {
-                "id": skill["name"],
+                "id": skill["id"],
                 "name": skill["data"]["skill_name"],
             }
             missing_skills.append(missing_skill)
@@ -135,8 +153,24 @@ def add_student_skills(id, get):
         skill_button = skill["id"] + "skill"
         skill_check = get(skill_button)
         if skill_check == "on":
-            student["data"]["student_skills"].append(skill["id"])
+            new_skill = {
+                "skill": skill["id"],
+                "level": "1",
+            }
+            student["data"]["student_skills"].append(new_skill)
             skill["data"]["students_with_skill"].append(student["id"])
+
+
+def update_student_skills(id, get):
+    student = find_student(id)
+
+    if not check_existing_student(student):
+        return False
+
+    update_skills_by_type(student, get, "possessed")
+    update_skills_by_type(student, get, "desired")
+
+    return True
 
 
 def get_list_from_data(student, student_data, data_type):
@@ -149,12 +183,12 @@ def get_list_from_data(student, student_data, data_type):
                 continue
             elif (student_data == "desired_courses") and (student_item == type_item["id"]):
                 student_data_object["name"] = type_item["data"]["course_name"]
-                student_data_object["id"] = student_item["id"]
+                student_data_object["id"] = student_item
                 student_data_list.append(student_data_object)
             elif (student_data == "student_skills" or "desired_skills") and (student_item["skill"] == type_item["id"]):
                 student_data_object["name"] = type_item["data"]["skill_name"]
                 student_data_object["level"] = student_item["level"]
-                student_data_object["id"] = student_item["id"]
+                student_data_object["id"] = student_item["skill"]
                 student_data_list.append(student_data_object)
     return student_data_list
 
@@ -175,3 +209,14 @@ def get_student_data(id):
     }
 
     return student_display_data
+
+def get_student_list():
+    student_list = []
+    for student in students:
+        student_display_data = {
+            "id_URL": '/students/' + student['id'],
+            "name": student["data"]["first_name"] + " " + student["data"]["last_name"],
+        }
+        student_list.append(student_display_data)
+
+    return student_list

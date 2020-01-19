@@ -1,9 +1,12 @@
 {% extends 'index.html' %}
   {% block content %}
  <div>
-     <form action="/students/{student['id']}/add_skills" method="POST">
+     {% set main_path = "/students/" ~ student['id'] %}
+    {% set add_skills = main_path ~ "/add_skills" %}
+    <form action={{ add_skills }} method="POST">
      <div class="form-group row">
-        <div class="col-sm-3">Skills</div>
+    <h2>Learn Skills:</h2>
+        <div class="col-sm-3"></div>
         <div class="col-sm-9">
           {%for skill in skills %}
           <div class="custom-control custom-checkbox">

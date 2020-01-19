@@ -27,8 +27,14 @@
     {% endfor %}
     </ul>
 <div>
-    <button type="submit" id="edit" href="/update?id=student{'id'}" class="btn btn-primary">Edit Student</button>
-    <button type="submit" id="delete" class="btn btn-primary">Expel Student</button>
+    {% set main_path = "/students/" ~ student['id'] %}
+    {% set add_skills = main_path ~ "/add_skills" %}
+    {% set update_skills = main_path ~ "/update_skills" %}
+    {% set add_courses = main_path ~ "/update_courses" %}
+    <a href={{add_skills}}><button class="btn btn-primary">Add Skills</button></a>
+    <a href={{update_skills}}><button class="btn btn-primary">Update Skills</button></a>
+    <a href=/students/{{student['id']}}/update_courses><button class="btn btn-primary">Add Courses</button></a>
+    <a><button id="delete" class="btn btn-primary">Expel Student</button></a>
 </div>
 
 {% endblock %}

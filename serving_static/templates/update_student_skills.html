@@ -1,7 +1,9 @@
 {% extends 'index.html' %}
   {% block content %}
  <div>
-    <form action="/students/{student['id']}/update_skills" method="POST">
+     {% set main_path = "/students/" ~ student['id'] %}
+    {% set update_skills = main_path ~ "/update_skills" %}
+    <form action={{ update_skills }} method="POST">
           <fieldset class="form-group">
         <div class="row">
           <legend class="col-form-label col-sm-3 pt-0">Skills</legend>

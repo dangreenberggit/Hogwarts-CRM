@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+  {% block content %}
+ <div>
+     {% set main_path = "/students/" ~ student['id'] %}
+    {% set update_courses = main_path ~ "/update_courses" %}
+    <form action={{ update_courses }} method="POST">
+      <div class="form-group row">
+        <div class="col-sm-3">Courses</div>
+        <div class="col-sm-9">
+          {%for course in courses%}
+          <div class="custom-control custom-checkbox">
+            <input class="custom-control-input" type="checkbox" name={{course["id"]}}course id={{course["id"]}}>
+            <label class="custom-control-label" for={{course["id"]}}>
+              {{course["data"]["course_name"]}}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-9">
+          <button type="submit" class="btn btn-primary">Update Courses</button>
+        </div>
+      </div>
+    </form>
+ </div>
+
+{% endblock %}

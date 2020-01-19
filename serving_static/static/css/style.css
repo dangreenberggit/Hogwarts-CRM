@@ -96,3 +96,12 @@ a {
     }
   }
 }
+
+.student-display {
+    display: flex;
+    right: 2em;
+}
+
+.student-display li {
+    left: 0
+}
